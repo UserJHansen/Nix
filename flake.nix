@@ -7,8 +7,6 @@
 
     impermanence.url = "github:nix-community/impermanence";
     
-    inputs.deploy-rs.url = "github:serokell/deploy-rs";
-    
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -19,7 +17,7 @@
     };
   };
 
-  outputs = { self, nixpkgs, home-manager, impermanence, deploy-rs, flake-utils, terranix, disko }:
+  outputs = { self, nixpkgs, home-manager, impermanence, flake-utils, terranix, disko }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = import nixpkgs {
@@ -69,32 +67,21 @@
         };
         # nix run
         defaultApp = self.apps.${system}.apply;
-
-        checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
         })//(
         let
           x86_pkgs = import nixpkgs {
             config.allowUnfree = true;
             system = "x86_64-linux";
-            overlays = [
-              deploy-rs.overlay
-              (self: super: { deploy-rs = { inherit (pkgs) deploy-rs; lib = super.deploy-rs.lib; }; })
-            ];
           };
           x86_base = import ./machines {
             inherit nixpkgs;
             inherit impermanence;
             pkgs = x86_pkgs;
-          };
+            };
           
           aarch64_pkgs = import nixpkgs {
             config.allowUnfree = true;
             system = "aarch64-linux";
-            
-            overlays = [
-              deploy-rs.overlay
-              (self: super: { deploy-rs = { inherit (pkgs) deploy-rs; lib = super.deploy-rs.lib; }; })
-            ];
           };
           aarch64_base = import ./machines {
             inherit nixpkgs;
@@ -113,10 +100,6 @@
                 x86_base
               ];
             };
-          };
-          deploy.nodes.nixos-laptop.profiles.system = {
-              user = "root";
-              path = x86_pkgs.deploy-rs.lib.activate.nixos self.nixosConfigurations.nixos-laptop;
           };
       });
 }
