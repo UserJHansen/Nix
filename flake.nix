@@ -9,12 +9,13 @@
       ];
 
       imports = [
-        ./terraform
         ./hosts
+        ./terraform
       ];
 
       perSystem = { pkgs, system, lib, ... }@config: {
-          
+          imports = [
+          ];
       };
     };
 
