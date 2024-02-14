@@ -1,20 +1,24 @@
-{lib, pkgs, ...}:
-let
-userList = {
-  userj = import ./userj.nix;
-  dummy.canLogin = false;
-};
-in
-{
-  users = {
-    defaultUserShell = pkgs.zsh;
+{lib, pkgs, config, ...}: {
+  imports = [
+    ./userj.nix
+  ];
 
-    mutableUsers = false;
-
-    users = lib.attrsets.mapAttrs (name: value: value.account) (lib.attrsets.filterAttrs (name: value: value.canLogin) userList);
+  options = {
+    userList = lib.mkOption {
+      type = lib.types.attrs;
+    };
   };
-  
-  programs.zsh.enable = true;
 
-  security.sudo.wheelNeedsPassword = false;
+  config = {
+    userList.dummy.canLogin = false;
+
+    programs.zsh.enable = true;
+    users = {
+      defaultUserShell = pkgs.zsh;
+
+      mutableUsers = false;
+
+      users = lib.attrsets.mapAttrs (name: value: value.account) (lib.attrsets.filterAttrs (name: value: value.canLogin) config.userList);
+    };
+  };
 }

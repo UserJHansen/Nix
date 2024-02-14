@@ -1,6 +1,8 @@
 { lib, ... }: {
   imports = [
-    ./t2/web.nix
+    ./proxmox.nix
+    ./proxmox/provider.nix
+    ./proxmox/test.nix
   ];
 
   options = {
