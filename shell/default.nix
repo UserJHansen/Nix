@@ -31,8 +31,4 @@ with import <home-manager/modules/lib/dag.nix> { inherit lib; };
       pkgs.file
       coreutils
     ];
-
-    home.activation.copySSHKey = dagEntryAfter ["writeBoundary"] ''
-        install -D -m600 ${./private/id_rsa} $HOME/.ssh/id_rsa
-    '';
 }

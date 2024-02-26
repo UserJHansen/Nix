@@ -18,4 +18,8 @@ config: {
   config.users.users.root.openssh.authorizedKeys.keys = [
     (import ../wellknown).sshPublic
   ];
+
+  home.activation.copySSHKey = dagEntryAfter ["writeBoundary"] ''
+      install -D -m600 ${./../private/id_rsa} $HOME/.ssh/id_rsa
+  '';
 }
