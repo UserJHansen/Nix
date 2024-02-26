@@ -1,7 +1,7 @@
 { lib, ... }: {
   imports = [
     ./proxmox.nix
-    ./proxmox/provider.nix
+    ./../private/proxmox-provider.nix
     ./proxmox/test.nix
   ];
 

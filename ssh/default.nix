@@ -9,6 +9,12 @@ config: {
     ];
   };
 
+  programs.ssh = {
+    enable = true;
+  };
+
+  home.persistence."/persist/home/userj".directories = [".ssh"];
+
   config.users.users.root.openssh.authorizedKeys.keys = [
     (import ../wellknown).sshPublic
   ];

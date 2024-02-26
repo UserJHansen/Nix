@@ -2,3 +2,8 @@
 terraform.tfstate*
 config.tf.json
 result
+
+private/*
+
+.gitsecret/keys/random_seed
+!*.secret

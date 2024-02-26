@@ -1,5 +1,7 @@
 {lib, pkgs, config, ...}: {
   imports = [
+    ../shell
+
     ./userj.nix
   ];
 
@@ -12,7 +14,6 @@
   config = {
     userList.dummy.canLogin = false;
 
-    programs.zsh.enable = true;
     users = {
       defaultUserShell = pkgs.zsh;
 
