@@ -14,6 +14,7 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
+              mountOptions = [ "nofail" ];
             };
           };
           root = {
@@ -33,7 +34,7 @@
         lvs = {
           persist = {
             name = "persist";
-            size = "20%";
+            size = "20%FREE";
             content = {
               type = "filesystem";
               format = "ext4";
@@ -45,7 +46,7 @@
           };
           swap = {
             name = "swap";
-            size = "100%FREE";
+            size = "40%FREE";
             content = {
               type = "swap";
               randomEncryption = true;
@@ -54,7 +55,7 @@
           
           nix = {
             name = "nix";
-            size = "40%";
+            size = "40%FREE";
             content = {
               type = "filesystem";
               format = "ext4";

@@ -1,0 +1,12 @@
+keys:
+  - &admin_laptop age17synrmlvn64rjwnvn5clx95n4z2hwszyx5ym92sp7gz9yu4wy4nqwxux4f
+  - &servervm age1vn0n3ne07c30nnxu65jjnc2jj9s2dtwm3lyw6r7dzt4u305qhspsxxes8u
+
+creation_rules:
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
+    key_groups:
+    - age:
+      - *admin_laptop
+      - *servervm
+
+

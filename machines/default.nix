@@ -1,7 +1,7 @@
 config: {
   imports = [
     ./modules/base.nix
-    ./cloudinit.nix
+    ./simple.nix
     ./wslnix.nix
   ];
 }

@@ -18,7 +18,9 @@
 
       mutableUsers = false;
 
-      users = lib.attrsets.mapAttrs (name: value: value.account) (lib.attrsets.filterAttrs (name: value: value.canLogin) config.userList);
+      users = lib.attrsets.mapAttrs (name: value: value.account) (lib.attrsets.filterAttrs (name: value: value.canLogin) config.userList) // {
+        root.hashedPasswordFile = config.sops.secrets."passwords/root".path;
+      };
     };
   };
 }

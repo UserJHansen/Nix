@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+# Create a temporary directory
+temp=$(mktemp -d)
+
+# Function to cleanup temporary directory on exit
+cleanup() {
+  rm -rf "$temp"
+}
+trap cleanup EXIT
+
+# Create the directory where sshd expects to find the host keys
+install -d -m755 "$temp/persist"
+
+# Decrypt your private key from the password store and copy it to the temporary directory
+ssh-keygen -t ed25519 -N "" -f "$temp/persist/ssh_host_ed25519_key"
+
+# Set the correct permissions so sshd will accept the key
+chmod 600 "$temp/persist/ssh_host_ed25519_key"
+
+printf "\n\nPLEASE ADD THE FOLLOWING TO YOUR .sops.yaml FILE:\n" >> .sops.yaml
+nix-shell -p ssh-to-age --run "ssh-to-age < $temp/persist/ssh_host_ed25519_key.pub" >> .sops.yaml
+
+$EDITOR .sops.yaml
+
+nix-shell -p sops --run "sops updatekeys -y ./secrets/keys.yaml"
+
+# Install NixOS to the host system with our secrets
+ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@$2 "nix-env -iA nixos.rsync"
+nix run github:nix-community/nixos-anywhere -- --extra-files "$temp" --flake ".#$1" root@$2

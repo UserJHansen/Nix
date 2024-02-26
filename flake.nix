@@ -18,6 +18,8 @@
           imports = [
           ];
       };
+
+      flake.checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks inputs.self.deploy) inputs.deploy-rs.lib;
     };
 
   inputs = {
@@ -27,11 +29,11 @@
       inputs.nixpkgs-lib.follows = "nixpkgs";
     };
 
-    hm = {
+    home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    deploy-rs.url = "github:serokell/deploy-rs";
 
     terranix = {
       url = "github:terranix/terranix";

@@ -1,16 +1,13 @@
-{ lib, pkgs, moduleWithSystem, inputs, ... }@ctx: {
+{ lib, inputs, self, ... }@ctx: {
   flake.nixosModules.base = {
       imports = [
         ./impermanence.nix
+        ./../../secrets
+        ./../../ssh
         ./../../users
-        ({
+        ({pkgs,...}: {
             programs.git.enable = true;
             nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
-            swapDevices = [{
-                device = "/dev/pool/swap";
-              }
-            ];
 
             boot.loader = {
               systemd-boot = {
@@ -25,6 +22,11 @@
 
             system.stateVersion = "24.05";
         })
+        inputs.home-manager.nixosModules.home-manager
+        {
+          home-manager.useGlobalPkgs = true;
+          home-manager.useUserPackages = true;
+        }
 
         inputs.impermanence.nixosModules.impermanence
         inputs.disko.nixosModules.disko
